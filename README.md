@@ -75,4 +75,7 @@ docker logs -f validator-node
 # Claim Faucet :
 [CLICK HERE](https://zkverify-faucet.zkverify.io/)
 
+# Connect your wallet in polkadot
+[CLICK HERE](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Ftestnet-rpc.zkverify.io#/staking)
+
 
