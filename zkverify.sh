@@ -22,53 +22,64 @@ check_root() {
 # Instal dependensi yang diperlukan
 install_dependencies() {
     echo "🔄 Memperbarui daftar paket dan menginstal dependensi..."
-    apt update && apt install -y docker.io docker-compose jq sed
+    apt update && apt install -y docker.io docker-compose jq sed git
 }
 
-# Tambahkan user saat ini ke grup Docker
+# Tambahkan user yang menjalankan skrip ke grup Docker
 setup_docker_user() {
-    echo "👤 Menambahkan user ke grup docker..."
-    usermod -aG docker "$SUDO_USER"
-    newgrp docker
+    local user
+    user=${SUDO_USER:-$(logname)}  # Gunakan SUDO_USER atau logname jika kosong
+    if [ -n "$user" ]; then
+        echo "👤 Menambahkan user '$user' ke grup docker..."
+        usermod -aG docker "$user"
+    else
+        echo "⚠️ Tidak dapat menentukan user yang menjalankan skrip."
+    fi
 }
 
-# Buat user zkverify
+# Buat user zkverify jika belum ada
 create_zkverify_user() {
-    echo "👤 Membuat user 'zkverify'..."
-    useradd -m -s /bin/bash zkverify
-    echo "🔑 Silakan atur password untuk user 'zkverify':"
-    passwd zkverify
-    usermod -aG docker zkverify
+    if id "zkverify" &>/dev/null; then
+        echo "✅ User 'zkverify' sudah ada, lewati pembuatan."
+    else
+        echo "👤 Membuat user 'zkverify'..."
+        useradd -m -s /bin/bash zkverify
+        echo "🔑 Silakan atur password untuk user 'zkverify':"
+        passwd zkverify
+        usermod -aG docker zkverify
+    fi
 }
 
-# Clone dan jalankan zkVerify
+# Clone dan jalankan zkVerify jika belum ada
 setup_zkverify() {
-    su - zkverify <<'EOF'
-    echo "🛠️ Mengatur environment untuk zkVerify..."
-    cd ~
-    git clone https://github.com/zkVerify/compose-zkverify-simplified.git
-    cd compose-zkverify-simplified
-    ./scripts/init.sh
-    ./scripts/start.sh
-EOF
+    sudo -u zkverify bash -c '
+        echo "🛠️ Mengatur environment untuk zkVerify..."
+        cd ~
+        if [ ! -d "compose-zkverify-simplified" ]; then
+            git clone https://github.com/zkVerify/compose-zkverify-simplified.git
+        fi
+        cd compose-zkverify-simplified
+        ./scripts/init.sh
+        ./scripts/start.sh
+    '
 }
 
 # Update repo zkVerify jika sudah ada
 update_zkverify() {
-    su - zkverify <<'EOF'
-    echo "🔄 Memperbarui repository zkVerify..."
-    cd ~/zkverify-repo
-    git pull
-    ./scripts/update.sh
-EOF
+    sudo -u zkverify bash -c '
+        echo "🔄 Memperbarui repository zkVerify..."
+        cd ~/compose-zkverify-simplified || exit
+        git pull
+        ./scripts/update.sh
+    '
 }
 
 # Menjalankan validator node di testnet
 run_validator_node() {
-    su - zkverify <<'EOF'
-    echo "🚀 Menjalankan validator node di testnet..."
-    docker compose -f /home/zkverify/compose-zkverify-simplified/deployments/validator-node/testnet/docker-compose.yml up -d
-EOF
+    sudo -u zkverify bash -c '
+        echo "🚀 Menjalankan validator node di testnet..."
+        docker compose -f ~/compose-zkverify-simplified/deployments/validator-node/testnet/docker-compose.yml up -d
+    '
 }
 
 # Jalankan semua fungsi
