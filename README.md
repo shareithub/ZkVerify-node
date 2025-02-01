@@ -24,9 +24,9 @@ sudo passwd shareithub
 sudo usermod -aG docker shareithub
 ```
 
-5. Login user Zkverify
+5. Login user. your_user change to your create user for node
 ```
-su - zkverify
+su - your_user
 ```
 
 6. Clone repository
