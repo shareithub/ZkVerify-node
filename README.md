@@ -6,35 +6,56 @@ u can following this step by step
 sudo apt update && sudo apt install -y docker.io docker-compose jq sed
 ```
 
-3. Check docker 
+2. Add user in group docker
 ```
-docker --version
+sudo usermod -aG docker $USER
+newgrp docker
 ```
 
-4. Clone repository
+3. Check docker
+```
+docker ps
+```
+
+4. Create user for Node. u can change "shareithub" to your name node
+```
+sudo useradd -m -s /bin/bash shareithub
+sudo passwd shareithub
+sudo usermod -aG docker shareithub
+ls -ld /home/shareithub
+```
+
+5. Login user. your_user change to your create user for node
+```
+su - shareithub
+```
+
+# U CAN CHANGE "shareithub" to your username or other name for step 4 & 5
+
+6. Clone repository
 ```
 git clone https://github.com/zkVerify/compose-zkverify-simplified.git
 cd compose-zkverify-simplified
 ```
 
-5. Start init , and choose Validator Node
+7. Start init , and choose Validator Node
 ```
 ./scripts/init.sh
 ```
 
-6. Update Node
+8. Update Node
 ```
 cd ~/zkverify-repo
 git pull
 ./scripts/update.sh
 ```
 
-7. Start Node
+9. Start Node
 ```
 ./scripts/start.sh
 ```
 
-8. Compose your docker. Chaneg " your_user " to your folder
+10. Compose your docker. Chaneg " your_user " to your folder
 ```
 docker compose -f /home/your_user/compose-zkverify-simplified/deployments/validator-node/testnet/docker-compose.yml up -d
 ```
@@ -57,5 +78,4 @@ docker logs -f validator-node
 
 # Connect your wallet in polkadot
 [CLICK HERE](https://polkadot.js.org/apps/?rpc=wss%3A%2F%2Ftestnet-rpc.zkverify.io#/staking)
-
 
