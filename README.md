@@ -22,6 +22,7 @@ docker ps
 sudo useradd -m -s /bin/bash shareithub
 sudo passwd shareithub
 sudo usermod -aG docker shareithub
+ls -ld /home/shareithub
 ```
 
 5. Login user. your_user change to your create user for node
