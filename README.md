@@ -26,8 +26,10 @@ sudo usermod -aG docker shareithub
 
 5. Login user. your_user change to your create user for node
 ```
-su - your_user
+su - shareithub
 ```
+
+# U CAN CHANGE "shareithub" to your username or other name for step 4 & 5
 
 6. Clone repository
 ```
