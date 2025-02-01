@@ -37,12 +37,23 @@ sudo apt install docker-ce docker-ce-cli containerd.io -y
 echo "Verifying Docker installation..."
 sudo docker --version
 
-# Install Docker Compose
-echo "Installing Docker Compose..."
+# Install Docker Compose (fixing the dangling symlink issue)
+echo "Fixing Docker Compose symlink and installing Docker Compose..."
+
+# Ensure /usr/local/bin exists and is writable
+sudo mkdir -p /usr/local/bin
+sudo chmod 755 /usr/local/bin
+
+# Remove any existing symlink for docker-compose
+if [ -L /usr/local/bin/docker-compose ]; then
+    echo "Removing existing dangling symlink for Docker Compose..."
+    sudo rm /usr/local/bin/docker-compose
+fi
+
+# Download the latest Docker Compose binary
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 # Make Docker Compose executable
-echo "Making Docker Compose executable..."
 sudo chmod +x /usr/local/bin/docker-compose
 
 # Verify Docker Compose installation
