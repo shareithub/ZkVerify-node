@@ -22,16 +22,25 @@ check_root() {
 # Instal dependensi yang diperlukan
 install_dependencies() {
     echo "🔄 Memperbarui daftar paket dan menginstal dependensi..."
-    apt update && apt install -y docker.io docker-compose-plugin jq sed git
+    apt update && apt install -y docker.io jq sed git
 }
 
 # Periksa dan pasang Docker Compose v2 jika belum ada
 install_docker_compose() {
     echo "🔄 Memastikan Docker Compose v2 terinstal..."
+
+    # Hapus Docker Compose v1 jika terinstal
+    if command -v docker-compose &>/dev/null; then
+        echo "🚨 Docker Compose v1 terdeteksi, menghapusnya..."
+        sudo apt remove -y docker-compose
+    fi
+
+    # Periksa apakah Docker Compose v2 sudah ada
     if ! docker compose version &>/dev/null; then
         echo "🚨 Docker Compose tidak ditemukan. Menginstal Docker Compose v2..."
-        curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
-        chmod +x ~/.docker/cli-plugins/docker-compose
+        sudo mkdir -p ~/.docker/cli-plugins/
+        sudo curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+        sudo chmod +x ~/.docker/cli-plugins/docker-compose
         echo "✅ Docker Compose v2 berhasil diinstal."
     else
         echo "✅ Docker Compose v2 sudah terinstal."
@@ -44,7 +53,7 @@ setup_docker_user() {
     user=${SUDO_USER:-$(logname)}  # Gunakan SUDO_USER atau logname jika kosong
     if [ -n "$user" ]; then
         echo "👤 Menambahkan user '$user' ke grup docker..."
-        usermod -aG docker "$user"
+        sudo usermod -aG docker "$user"
     else
         echo "⚠️ Tidak dapat menentukan user yang menjalankan skrip."
     fi
@@ -56,10 +65,10 @@ create_zkverify_user() {
         echo "✅ User 'zkverify' sudah ada, lewati pembuatan."
     else
         echo "👤 Membuat user 'zkverify'..."
-        useradd -m -s /bin/bash zkverify
+        sudo useradd -m -s /bin/bash zkverify
         echo "🔑 Silakan atur password untuk user 'zkverify':"
-        passwd zkverify
-        usermod -aG docker zkverify
+        sudo passwd zkverify
+        sudo usermod -aG docker zkverify
     fi
 }
 
