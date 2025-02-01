@@ -19,9 +19,9 @@ docker ps
 
 4. Create user for Node
 ```
-sudo useradd -m -s /bin/bash zkverify
-sudo passwd zkverify
-sudo usermod -aG docker zkverify
+sudo useradd -m -s /bin/bash shareithub
+sudo passwd shareithub
+sudo usermod -aG docker shareithub
 ```
 
 5. Login user Zkverify
