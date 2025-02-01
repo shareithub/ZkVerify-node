@@ -8,11 +8,18 @@ echo "/___/_//_/_/ |_/_/|_/___/ /___/ /_/   /_//_/\____/____/ "
 echo "               ZkVerify NODE                            " 
 sleep 3
 
-#!/bin/bash
-
 # Update sistem
 echo "Updating the system..."
 sudo apt update && sudo apt upgrade -y
+
+# Menghapus containerd jika ada konflik
+echo "Removing existing containerd package..."
+sudo apt-get remove -y containerd
+
+# Membersihkan cache apt dan memperbarui daftar paket
+echo "Cleaning apt cache and updating package list..."
+sudo apt-get clean
+sudo apt-get update
 
 # Install dependensi dan paket tambahan
 echo "Installing dependencies and packages..."
