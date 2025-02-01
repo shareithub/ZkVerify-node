@@ -22,7 +22,20 @@ check_root() {
 # Instal dependensi yang diperlukan
 install_dependencies() {
     echo "🔄 Memperbarui daftar paket dan menginstal dependensi..."
-    apt update && apt install -y docker.io docker-compose jq sed git
+    apt update && apt install -y docker.io docker-compose-plugin jq sed git
+}
+
+# Periksa dan pasang Docker Compose v2 jika belum ada
+install_docker_compose() {
+    echo "🔄 Memastikan Docker Compose v2 terinstal..."
+    if ! docker compose version &>/dev/null; then
+        echo "🚨 Docker Compose tidak ditemukan. Menginstal Docker Compose v2..."
+        curl -SL https://github.com/docker/compose/releases/latest/download/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose
+        chmod +x ~/.docker/cli-plugins/docker-compose
+        echo "✅ Docker Compose v2 berhasil diinstal."
+    else
+        echo "✅ Docker Compose v2 sudah terinstal."
+    fi
 }
 
 # Tambahkan user yang menjalankan skrip ke grup Docker
@@ -85,6 +98,7 @@ run_validator_node() {
 # Jalankan semua fungsi
 check_root
 install_dependencies
+install_docker_compose
 setup_docker_user
 create_zkverify_user
 setup_zkverify
