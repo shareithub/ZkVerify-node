@@ -16,6 +16,10 @@ sudo apt update -y
 echo "Installing dependencies..."
 sudo apt install apt-transport-https ca-certificates curl software-properties-common git -y
 
+# Remove conflicting containerd package if it exists
+echo "Removing conflicting containerd package if it exists..."
+sudo apt-get remove containerd -y
+
 # Add Docker’s official GPG key
 echo "Adding Docker's GPG key..."
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -35,7 +39,7 @@ sudo docker --version
 
 # Install Docker Compose
 echo "Installing Docker Compose..."
-sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r .tag_name)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 
 # Make Docker Compose executable
 echo "Making Docker Compose executable..."
