@@ -64,5 +64,13 @@ docker compose -f /home/your_user/compose-zkverify-simplified/deployments/valida
 docker logs -f validator-node
 ```
 
+# CHECK YOUR NODE IN :
+[CLICK HERE ](https://testnet-telemetry.zkverify.io/#/0xc00425dcaa0a1bc5bf1163a2d69d7abb2cc6180de78b4e10297b31a4d9cc928a)
+
+# Download Wallet Talisman :
+[CLICK HERE](https://chromewebstore.google.com/detail/talisman-wallet/fijngjgcjhjmmpcmkeiomlglpeiijkld)
+
+# Claim Faucet :
+[CLICK HERE](https://zkverify-faucet.zkverify.io/)
 
 
