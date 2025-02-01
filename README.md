@@ -17,7 +17,7 @@ newgrp docker
 docker ps
 ```
 
-4. Create user for Node
+4. Create user for Node. u can change "shareithub" to your name node
 ```
 sudo useradd -m -s /bin/bash shareithub
 sudo passwd shareithub
